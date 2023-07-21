@@ -1,6 +1,6 @@
 # SumTalker
 ## How it Works
-The API receives a .txt file with the summary text. It converts the text to audio using the TikTok text-to-speech engine and returns an mp3 file with the full audio version of the summary.
+The API receives a ```.txt file``` with the summary text. It converts the text to audio using the TikTok text-to-speech engine and returns an mp3 file with the full audio version of the summary.
 
 ## Usage
 - Clone this repository
