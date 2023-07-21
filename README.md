@@ -23,7 +23,7 @@ The API receives a ```.txt file``` with the summary text. It converts the text t
    }
   ```
   ### Voices
-  The project uses TikTok TTS voices to generate the audios. There are various voices available, each with different characteristics. Voices are identified by a code like ```en_001```, ```en_003```. The full list of available voices can be found in the TikTok TTS documentation (if no voice is specified, it will use Portuguese by default).
+  The project uses TikTok TTS voices to generate the audios. There are various voices available, each with different characteristics. Voices are identified by a code like ```en_001```, ```en_003```. The full list of available voices can be found in the TikTok TTS documentation.
 
 ## Technologies
 - Node.js
