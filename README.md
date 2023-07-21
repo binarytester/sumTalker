@@ -1,23 +1,21 @@
 # SumTalker
 ## How it Works
-The API receives a .txt file containing the summary text. It splits the text into smaller sentences and generates a separate audio file for each sentence using the TikTok text-to-speech engine.
-
-Finally, all generated audio files are concatenated into a single mp3 file, returning the full audio version of the summary.
-
-## Endpoints
-```POST /audioresume```
-- Receives the txt file path and desired voice in the request body.
-- Returns mp3 audio with the spoken summary.
+The API receives a .txt file with the summary text. It converts the text to audio using the TikTok text-to-speech engine and returns an mp3 file with the full audio version of the summary.
 
 ## Usage
 - Clone this repository
 - Configure ```SESSION``` environment variable (file .env) with your [TikTok TTS](https://www.npmjs.com/package/tiktok-tts) session ID
-- Create an audios folder to store generated audios
+- Create an ```audios``` folder to store generated audios
+- Start the server with ```npm start``` (it will run on port 3000 by default)
 - Place ```.txt``` file with summary in root folder
-- Make POST request to ```/audiobook``` with txt **file name** and desired **voice** in body
+- Make POST request to ```http://localhost:3000/audiobook``` with txt **file name** and desired **voice** in body (if no voice is specified, it will use Portuguese by default)
 - Listen to generated audio!
 
-## Example
+## Endpoints
+```POST /audiobook```
+- Receives the txt file path and desired voice in the request body.
+- Returns mp3 audio with the spoken summary.
+  ### Request example
   ```
    {
     "file": "my-summary.txt",
