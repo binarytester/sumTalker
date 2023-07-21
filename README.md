@@ -18,7 +18,7 @@ The API receives a ```.txt file``` with the summary text. It converts the text t
   ### Request example
   ```
    {
-    "file": "my-summary.txt",
+    "path": "my-summary.txt",
     "voice": "en_001"
    }
   ```
