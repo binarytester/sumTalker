@@ -2,7 +2,7 @@ const { config, createAudioFromText } = require("tiktok-tts");
 require("dotenv").config();
 const fs = require("fs");
 const fsExtra = require("fs-extra");
-const audioconcat = require("audioconcat");
+const concatStream = require("concat-stream");
 const path = require("path");
 
 // Set the session ID (private value)
@@ -33,14 +33,15 @@ const generateAudio = async (word, filename, voice) => {
   }
 };
 
-// Verify if the file has the .txt extension
-const verifyExt = (filepath) => {
-  const fileExtension = path.extname(filepath).toLowerCase();
-  return fileExtension === ".txt";
-};
-
 // Generate audios from a text file, splitting it into phrases using "/"
-const generateAudios = async (filepath, voice = "br_005") => {
+const generateAudios = async (filepath, voice = "pt_female_lhays") => {
+  // create audios folder
+  const nameFolder = "./audios";
+
+  if (!fs.existsSync(nameFolder)) {
+    fs.mkdirSync(nameFolder);
+  }
+
   try {
     const punctuations = /[.,!?]/g;
 
@@ -65,7 +66,7 @@ const generateAudios = async (filepath, voice = "br_005") => {
       if (char === "/") {
         await generateAudio(
           audioText.trim(),
-          `./audios/audio${totalAudio}`,
+          `${nameFolder}/audio${totalAudio}`,
           voice
         );
         totalAudio++;
@@ -78,7 +79,7 @@ const generateAudios = async (filepath, voice = "br_005") => {
     if (audioText) {
       await generateAudio(
         audioText.trim(),
-        `./audios/audio${totalAudio}`,
+        `${nameFolder}/audio${totalAudio}`,
         voice
       );
       totalAudio++;
@@ -91,6 +92,7 @@ const generateAudios = async (filepath, voice = "br_005") => {
 // Delete all audio files in the folder
 const deleteAudios = async (pathFolder) => {
   fsExtra.emptyDirSync(pathFolder);
+  console.clear();
   console.log("Contents of the directory removed successfully");
 };
 
@@ -103,31 +105,31 @@ const concatAudiosToOnlyOne = async (pathAudios, finalFile) => {
     }
 
     let data = await fs.promises.readdir(pathAudios);
-    data = data.sort((a, b) => {
-      a = parseInt(a.split(".")[0]);
-      b = parseInt(b.split(".")[0]);
-      if (a < b) {
-        return -1;
-      }
-      if (a > b) {
-        return 1;
-      }
-      return 0;
-    });
 
     data = data.map((item) => {
       return `${pathAudios}/${item}`;
     });
 
-    audioconcat(data)
-      .concat(finalFile)
-      .on("error", (err) => {
-        console.error("Error concatenating audios:", err);
-        throw err;
+    // merging the data
+    Promise.all(
+      data.map((file) => {
+        return new Promise((resolve, reject) => {
+          let stream = fs.createReadStream(file);
+          stream.pipe(
+            concatStream((data) => {
+              resolve(data);
+            })
+          );
+          stream.on("error", reject);
+        });
       })
-      .on("end", function (output) {
+    )
+      .then((datas) => {
+        let output = Buffer.concat(datas);
+        fs.writeFileSync(finalFile, output);
         deleteAudios("./audios");
-      });
+      })
+      .catch(console.error);
   } catch (err) {
     console.error(err);
   }

@@ -5,7 +5,6 @@ The API receives a ```.txt file``` with the summary text. It converts the text t
 ## Usage
 - Clone this repository
 - Configure ```SESSION``` environment variable (file .env) with your [TikTok TTS](https://www.npmjs.com/package/tiktok-tts) session ID
-- Create an ```audios``` folder to store generated audios
 - Start the server with ```npm start``` (it will run on port 3000 by default)
 - Place ```.txt``` file with summary in root folder
 - Make POST request to ```http://localhost:3000/audiobook``` with txt **file name** and desired **voice** in body (if no voice is specified, it will use Portuguese by default)
@@ -28,5 +27,5 @@ The API receives a ```.txt file``` with the summary text. It converts the text t
 ## Technologies
 - Node.js
 - Express
-- audioconcat
+- concat-stream
 - [TikTok TTS](https://www.npmjs.com/package/tiktok-tts)
